@@ -19,30 +19,29 @@ import javax.ws.rs.core.Response;
 @Path("/mobile")
 public class MobileResources {
 
-	List<String> mobileList = new ArrayList<>();
+	List<Mobile> mobileList = new ArrayList<>();
 	
 	@GET
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAllMobile(){
 		return Response.ok(mobileList).build();
 	}
 	
 	@POST
-	@Consumes(MediaType.TEXT_PLAIN)
-	public Response addMobile(String mobileName) {
-		mobileList.add(mobileName);
-		return Response.ok(mobileName).build();
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addMobile(Mobile mobile) {
+		mobileList.add(mobile);
+		return Response.ok(mobile).build();
 	}
 	
 	@PUT
-	@Path("/{oldMobileName}")
-	@Produces(MediaType.TEXT_PLAIN)
-	@Consumes(MediaType.TEXT_PLAIN)
-	public Response updateMobile(@PathParam("oldMobileName") String oldMobileName,
-								@QueryParam("newMobilename") String newMobilename) {
-		mobileList = mobileList.stream().map(mobile->{
-			if(mobile.equals(oldMobileName)) {
-				return newMobilename;
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateMobile(@PathParam("id") int id,Mobile mobileToUpdate) {
+		mobileList.stream().map(mobile->{
+			if(mobile.getId()==id) {
+				return mobileToUpdate;
 			}else {
 				return mobile;
 			}
@@ -50,17 +49,23 @@ public class MobileResources {
 		return Response.ok(mobileList).build();
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	@DELETE
-	@Path("{mobile}")
+	@Path("{id}")
 	@Produces(MediaType.TEXT_PLAIN)
 	@Consumes(MediaType.TEXT_PLAIN)
-	public Response deleteMobile(@PathParam("mobile") String mobile) {
-		boolean isRemoved = mobileList.remove(mobile);
-		if(isRemoved) {
-			return Response.ok(mobileList).build();
-		}else {
-			return Response.status(Response.Status.BAD_REQUEST).build();
+	public Response deleteMobile(@PathParam("id") int id) {
+		Integer mobileIdToDelete = null;
+		for(int i=0;i<mobileList.size();i++) {
+			if(mobileList.get(i).getId()==id) {
+				mobileIdToDelete = id;
+			}
 		}
+		if(mobileIdToDelete!=null) {
+			mobileList.remove(mobileIdToDelete);
+			return Response.ok(mobileList).build();
+		}
+		return Response.status(Response.Status.BAD_REQUEST).build();
 	}
 	 
 }
