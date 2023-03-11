@@ -52,8 +52,8 @@ public class MobileResources {
 	@SuppressWarnings("unlikely-arg-type")
 	@DELETE
 	@Path("{id}")
-	@Produces(MediaType.TEXT_PLAIN)
-	@Consumes(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMobile(@PathParam("id") int id) {
 		Integer mobileIdToDelete = null;
 		for(int i=0;i<mobileList.size();i++) {
