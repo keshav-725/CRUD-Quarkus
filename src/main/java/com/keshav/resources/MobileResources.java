@@ -51,7 +51,7 @@ public class MobileResources {
 	
 	@SuppressWarnings("unlikely-arg-type")
 	@DELETE
-	@Path("{id}")
+	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteMobile(@PathParam("id") int id) {
@@ -64,6 +64,16 @@ public class MobileResources {
 		if(mobileIdToDelete!=null) {
 			mobileList.remove(mobileIdToDelete);
 			return Response.ok(mobileList).build();
+		}
+		return Response.status(Response.Status.BAD_REQUEST).build();
+	}
+	
+	@GET
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getMobileById(@PathParam("id") int id) {
+		for(Mobile mobile : mobileList) {
+			if(mobile.getId()==id) return Response.ok(mobile).build();
 		}
 		return Response.status(Response.Status.BAD_REQUEST).build();
 	}
